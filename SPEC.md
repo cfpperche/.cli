@@ -18,13 +18,17 @@ In priority order:
    data. Text rendering is a presentation concern, never the source of truth.
 4. **Boring to parse.** The grammar is context-free and small. No mode
    switches, no implicit expansion, no runtime-dependent parsing.
-5. **Token-frugal.** Every feature is judged by the tokens it costs or saves
-   across the *whole* agent loop. The wins are architectural — one script
-   instead of N tool-call round-trips; envelopes compact by default, verbose
-   on demand; diagnostics good enough that repair takes one retry; manifests
-   browsable without dumping every schema into context. Never syntax golf:
-   when brevity and readability conflict, goal 2 wins. The metric is
-   *tokens per task* (BENCHMARKS.md §2).
+5. **Context-frugal.** The scarce resource is the agent's context window,
+   not the token bill — prices fall with technology; attention does not.
+   Polluted context degrades an agent's reasoning even when tokens are free.
+   Every feature is judged by what it forces into the agent's working
+   context: one script instead of N tool-call round-trips; envelopes compact
+   by default, verbose on demand; diagnostics good enough that repair takes
+   one retry; manifests browsable without dumping every schema. Raw token
+   count still matters, but as a secondary concern, never a maximalist one.
+   Never syntax golf: when brevity and readability conflict, goal 2 wins.
+   The metric remains *tokens per task* (BENCHMARKS.md §2) — the best
+   measurable proxy for context load today.
 
 Non-goals (for now): interactive ergonomics (completions, prompts, job
 control) — this is a script substrate, not a daily-driver shell; POSIX
