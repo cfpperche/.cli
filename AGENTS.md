@@ -44,8 +44,11 @@ cargo bench -p dotcli-parser    # parse throughput (see BENCHMARKS.md)
 cargo build --release           # ./target/release/cli
 ```
 
-Definition of done for any change: `cargo test` green and `cargo fmt --check`
-clean.
+Definition of done for any change: `cargo test` green, `cargo fmt --check`
+clean, `cargo clippy --all-targets -- -D warnings` clean. CI runs exactly
+these plus smoke steps (.github/workflows/ci.yml); the regression rules
+(bug fix ⇒ failing-first test, new construct ⇒ tests + fixture, new error
+⇒ content assertion) live in TESTING.md and are not optional.
 
 ## Conventions
 
