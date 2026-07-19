@@ -1,0 +1,8 @@
+# Remove build artifacts. `fs.remove` declares [write, destructive] and
+# idempotent: true — an agent knows this is safe to retry, and a runtime
+# policy of `--deny destructive` blocks it before execution.
+
+let result = try fs.remove --paths=["dist/", ".cache/"] --recursive=true
+if $result.status == "error" {
+  log.warn --message=$result.error.message
+}

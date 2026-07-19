@@ -1,0 +1,17 @@
+# Publish built docs to a bucket.
+# Try it safely first:  cli run examples/publish.cli --dry-run
+# Block the upload:     cli run examples/publish.cli --deny net
+
+let pages = glob "docs/*.md"
+
+let built = $pages | md.render --theme="plain"
+
+fs.write --dir="dist/" --files=$built
+
+let result = try net.upload --to="s3://my-bucket/docs" --files=$built
+if $result.status == "error" {
+  log.error --message=$result.error.message
+  exit --code=1
+}
+
+log.info --message="Published."
