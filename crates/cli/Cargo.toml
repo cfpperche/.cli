@@ -1,0 +1,13 @@
+[package]
+name = "dotcli"
+description = "Reference CLI for the .cli language (working title)"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "cli"
+path = "src/main.rs"
+
+[dependencies]
+dotcli-parser = { path = "../parser" }

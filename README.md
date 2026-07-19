@@ -41,11 +41,27 @@ That is the gap this project targets.
 
 ## Status
 
-🚧 **Draft.** The minimal spec lives in [SPEC.md](SPEC.md). Nothing is
-implemented yet; the spec is the current deliverable and everything in it is
-open for debate.
+🚧 **Draft spec, early implementation.** The spec ([SPEC.md](SPEC.md)) is the
+source of truth and everything in it is open for debate. Milestone M1 of the
+reference implementation is done: a zero-dependency parser and `cli check`.
+
+```console
+$ cargo build
+$ ./target/debug/cli check examples/publish.cli
+examples/publish.cli: OK (6 statements, 7 commands)
+
+$ echo 'fs.remove /tmp/foo' | tee /tmp/bad.cli >/dev/null; ./target/debug/cli check /tmp/bad.cli
+/tmp/bad.cli:1:11: unexpected `/` — paths are strings and must be quoted (e.g. "/tmp/build")
+```
+
+Diagnostics are written so an agent can self-correct from the message alone —
+that is the project thesis applied to its own tooling.
 
 ## Repository layout
 
 - [`SPEC.md`](SPEC.md) — the minimal language specification (v0.1 draft)
-- [`examples/`](examples/) — illustrative scripts in the proposed syntax
+- [`ARCHITECTURE.md`](ARCHITECTURE.md) — components, stack, roadmap
+- [`GLOSSARY.md`](GLOSSARY.md) — canonical vocabulary
+- [`examples/`](examples/) — scripts in the proposed syntax (also parser fixtures)
+- [`crates/parser`](crates/parser/) — lexer + AST + parser (zero deps)
+- [`crates/cli`](crates/cli/) — the `cli` binary (`check` today; `run` next)

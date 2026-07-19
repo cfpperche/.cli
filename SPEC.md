@@ -45,20 +45,27 @@ A pipeline stops at the first `error` unless explicitly told otherwise
 ## 3. Grammar (minimal)
 
 ```ebnf
-script     = { statement } ;
-statement  = pipeline | binding | comment ;
-binding    = "let" IDENT "=" pipeline ;
-pipeline   = command { "|" command } ;
-command    = IDENT { argument } ;
-argument   = named_arg | value ;
-named_arg  = "--" IDENT [ "=" value ] ;
-value      = STRING | NUMBER | BOOL | list | record | var_ref ;
-list       = "[" [ value { "," value } ] "]" ;
-record     = "{" [ pair { "," pair } ] "}" ;
-pair       = IDENT ":" value ;
-var_ref    = "$" IDENT ;
-comment    = "#" TEXT EOL ;
+script      = { statement } ;
+statement   = pipeline | binding | conditional | comment ;
+binding     = "let" IDENT "=" pipeline ;
+conditional = "if" condition block [ "else" ( block | conditional ) ] ;
+block       = "{" { statement } "}" ;
+condition   = value [ ( "==" | "!=" ) value ] ;
+pipeline    = [ "try" ] ( command | value ) { "|" command } ;
+command     = IDENT { argument } ;
+argument    = named_arg | value ;
+named_arg   = "--" IDENT [ "=" value ] ;
+value       = STRING | NUMBER | BOOL | list | record | var_ref ;
+list        = "[" [ value { "," value } ] "]" ;
+record      = "{" [ pair { "," pair } ] "}" ;
+pair        = IDENT ":" value ;
+var_ref     = "$" IDENT { "." IDENT } ;
+comment     = "#" TEXT EOL ;
 ```
+
+Notes: a pipeline may be fed by a value (`$pages | md.render`); `var_ref`
+supports field access (`$result.error.message`); `if` takes a single
+comparison, not arbitrary expressions — v0.1 has **no loops** (see §9).
 
 Deliberate exclusions, each closing a class of bugs:
 
@@ -184,8 +191,9 @@ the effects check — before any bytes leave the machine.
 
 ## 9. Open questions
 
-1. **Conditionals/loops** — §7 sneaks in `if`; how much control flow belongs in
-   v0.1 vs. delegating to a host language?
+1. **Loops** — v0.1 deliberately has `if` but no loops; iteration is expected
+   to happen *inside* pipelines (commands over lists). Is that enough, or does
+   a bounded `for` belong in the language?
 2. **String interpolation** — excluded for safety, but painful. Is a
    non-executable template form (`fmt "hello {name}" --name=$n`) enough?
 3. **Streaming** — envelopes are whole-value; large outputs need a chunked
