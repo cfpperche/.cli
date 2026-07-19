@@ -85,6 +85,7 @@ that is the project thesis applied to its own tooling.
 - [`SPEC.md`](SPEC.md) — the minimal language specification (v0.1 draft)
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) — components, stack, roadmap
 - [`GLOSSARY.md`](GLOSSARY.md) — canonical vocabulary
+- [`BENCHMARKS.md`](BENCHMARKS.md) — what we measure and against whom
 - [`examples/`](examples/) — scripts in the proposed syntax (also parser fixtures)
 - [`crates/parser`](crates/parser/) — lexer + AST + parser (zero deps)
 - [`crates/cli`](crates/cli/) — the `cli` binary (`check` today; `run` next)

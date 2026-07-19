@@ -100,6 +100,7 @@ agent-generated scripts with no runtime in existence.
 SPEC.md            the minimal language spec (source of truth)
 ARCHITECTURE.md    this file
 GLOSSARY.md        canonical vocabulary
+BENCHMARKS.md      metrics, methodology, current numbers
 examples/          scripts in the proposed syntax (also parser fixtures)
 crates/
   parser/          lexer + AST + parser (zero deps)

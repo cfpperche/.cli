@@ -4,3 +4,7 @@ description = "Lexer, AST and parser for the .cli language (working title)"
 version.workspace = true
 edition.workspace = true
 repository.workspace = true
+
+[[bench]]
+name = "parse"
+harness = false
