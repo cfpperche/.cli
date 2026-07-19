@@ -18,9 +18,19 @@ In priority order:
    data. Text rendering is a presentation concern, never the source of truth.
 4. **Boring to parse.** The grammar is context-free and small. No mode
    switches, no implicit expansion, no runtime-dependent parsing.
+5. **Token-frugal.** Every feature is judged by the tokens it costs or saves
+   across the *whole* agent loop. The wins are architectural — one script
+   instead of N tool-call round-trips; envelopes compact by default, verbose
+   on demand; diagnostics good enough that repair takes one retry; manifests
+   browsable without dumping every schema into context. Never syntax golf:
+   when brevity and readability conflict, goal 2 wins. The metric is
+   *tokens per task* (BENCHMARKS.md §2).
 
-Non-goals (for now): interactive ergonomics (completions, prompts), job
-control, POSIX compatibility, performance.
+Non-goals (for now): interactive ergonomics (completions, prompts, job
+control) — this is a script substrate, not a daily-driver shell; POSIX
+compatibility; being a general-purpose programming language — complex logic
+belongs inside commands, not in the language; machine-benchmark supremacy —
+startup and parse targets are hygiene (BENCHMARKS.md §1), not the product.
 
 ## 2. Execution model
 
