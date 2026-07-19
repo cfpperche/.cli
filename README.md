@@ -39,6 +39,29 @@ That is the gap this project targets.
 5. **Unambiguous grammar** — no aliases, no implicit expansion, no
    context-dependent parsing. One way to read every line.
 
+## How this compares
+
+- **Bash / POSIX shells** — what agents actually drive today. Every footgun
+  class (quoting, word splitting, opaque output, free-text errors) is closed
+  here *by construction*, and commands carry enforceable effect declarations
+  bash cannot express.
+- **Nushell / PowerShell / Oils** — solved structured data, *for humans at an
+  interactive prompt*. None has enforced effects, runtime-level dry-run,
+  declared idempotency, or error codes as stable API — the agent-first half
+  is the part they're missing.
+- **Raw MCP / direct tool-calling** — one round-trip per call, orchestration
+  trapped in the model's context window. Here the plan is one reviewable
+  script: composed, policy-checked, dry-runnable *before* anything executes.
+  MCP is the tool transport we compose, not a competitor (SPEC §9).
+- **Sandboxes & permission prompts** (Docker, seccomp, agent harnesses) —
+  walls around opaque code, so every decision is coarse: allow the whole
+  command or block it. Declared effects make the permission unit *semantic*.
+  Sandboxes remain as defense-in-depth underneath the runtime.
+
+The gap all four leave open is the thesis: **the place where an agent's
+intent becomes an artifact a human can review and a runtime can enforce,
+before execution.**
+
 ## Status
 
 🚧 **Draft spec, early implementation.** The spec ([SPEC.md](SPEC.md)) is the

@@ -40,8 +40,9 @@ compete with coreutils.
 
 The data model and loader for command declarations (SPEC §4). Powers
 `cli commands`: list everything callable, with types and effects, without
-executing anything. External manifests (installed command packs) come later
-and carry the supply-chain questions in SPEC §9.
+executing anything. Parameter types are JSON Schema from day one so MCP
+`tools/list` maps 1:1 (SPEC §9). External manifests (installed command packs)
+come later and carry the supply-chain questions in SPEC §10.
 
 ### 5. The `cli` binary — `crates/cli`
 
@@ -55,11 +56,13 @@ The shell around everything:
 | `cli run --deny/--confirm <effect>` | M3 | policy enforcement |
 | `cli commands` | M3 | list manifests |
 
-### 6. Agent bridge (M6)
+### 6. MCP bridges (M5–M6)
 
-Expose the runtime as an MCP server so any agent can run scripts under a
-policy without custom integration. This is where "agent-first" becomes a
-product rather than a design stance.
+Both directions of SPEC §9. **Client** (M5): MCP tools become
+`mcp.<server>.<tool>` commands via synthesized manifests — the existing
+ecosystem is the extended stdlib. **Server** (M6): expose `cli run` as an MCP
+tool so any agent runs scripts under a policy without custom integration.
+This is where "agent-first" becomes a product rather than a design stance.
 
 ## Stack
 
@@ -82,10 +85,11 @@ a path to real OS-level effect sandboxing without FFI.
 
 - **M1 ✅ — `cli check`**: lexer, AST, parser, diagnostics; examples parse.
 - **M2 — runtime core**: envelopes, `let`/pipes/`try`/`if`, `log.*` + `glob`.
-- **M3 — effects**: manifests, effect checks, `--deny`/`--confirm`, `cli commands`.
+- **M3 — effects**: manifests (JSON-Schema-typed, MCP-compatible), effect
+  checks, `--deny`/`--confirm`, `cli commands`.
 - **M4 — dry-run**: runtime-wide simulation semantics.
-- **M5 — `exec` bridge** + external manifests.
-- **M6 — MCP server**.
+- **M5 — bridges out**: `exec` + MCP client (MCP tools as commands).
+- **M6 — MCP server**: `cli run` as a tool for any agent framework.
 
 Each milestone is independently usable — `cli check` already validates
 agent-generated scripts with no runtime in existence.

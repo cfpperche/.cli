@@ -65,7 +65,7 @@ comment     = "#" TEXT EOL ;
 
 Notes: a pipeline may be fed by a value (`$pages | md.render`); `var_ref`
 supports field access (`$result.error.message`); `if` takes a single
-comparison, not arbitrary expressions — v0.1 has **no loops** (see §9).
+comparison, not arbitrary expressions — v0.1 has **no loops** (see §10).
 
 Deliberate exclusions, each closing a class of bugs:
 
@@ -189,7 +189,48 @@ Running `cli run publish.cli --dry-run` simulates the write and upload and
 reports what *would* happen. Running with `--deny net` fails the upload step at
 the effects check — before any bytes leave the machine.
 
-## 9. Open questions
+## 9. MCP interoperability
+
+MCP is the established way agents reach tools. This project does not compete
+with it — it **composes** it. Interop runs in both directions.
+
+### 9.1 MCP tools as commands (client direction)
+
+The runtime connects to MCP servers and synthesizes manifests from
+`tools/list`: tool `create_issue` on server `github` becomes command
+`mcp.github.create_issue`, params derived from the tool's JSON Schema. The
+existing MCP ecosystem becomes the de-facto extended stdlib — nobody rewrites
+anything to make their tools scriptable here.
+
+Effect mapping from MCP tool annotations:
+
+| MCP annotation           | Manifest field           |
+| ------------------------ | ------------------------ |
+| `readOnlyHint: true`     | `effects: [read]`        |
+| `destructiveHint: true`  | `effects += destructive` |
+| `openWorldHint: true`    | `effects += net`         |
+| `idempotentHint`         | `idempotent`             |
+
+Trust boundary — two rules:
+
+1. MCP annotations are **hints from an untrusted server**. The runtime uses
+   them for policy decisions at the call boundary (call / confirm / deny); it
+   cannot sandbox what happens on the far side of the wire, and this spec
+   must never claim otherwise.
+2. A tool with **no annotations** gets worst-case effects
+   (`[read, write, net, destructive]`) — exactly like the `exec` bridge:
+   escaping the model is allowed, but visible and policy-gated.
+
+Design constraint this imposes on §4: manifest parameter types are **JSON
+Schema**, so `tools/list` maps 1:1 with no lossy translation.
+
+### 9.2 The runtime as an MCP server (server direction)
+
+`cli run` exposed as an MCP tool: any agent submits a script plus a policy
+(`deny: [destructive]`) and gets the structured envelopes back. One
+integration, every agent framework.
+
+## 10. Open questions
 
 1. **Loops** — v0.1 deliberately has `if` but no loops; iteration is expected
    to happen *inside* pipelines (commands over lists). Is that enough, or does
