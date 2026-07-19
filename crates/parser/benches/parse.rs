@@ -26,7 +26,9 @@ fn main() {
     let start = Instant::now();
     let mut statements = 0;
     for _ in 0..iters {
-        statements = dotcli_parser::parse(&corpus).expect("corpus must parse").len();
+        statements = dotcli_parser::parse(&corpus)
+            .expect("corpus must parse")
+            .len();
     }
     let elapsed = start.elapsed();
 

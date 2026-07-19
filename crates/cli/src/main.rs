@@ -86,10 +86,11 @@ fn count_commands(stmts: &[Statement]) -> usize {
         .map(|s| match s {
             Statement::Binding { pipeline, .. } => pipeline.commands.len(),
             Statement::Pipeline(p) => p.commands.len(),
-            Statement::If { then_block, else_block, .. } => {
-                count_commands(then_block)
-                    + else_block.as_deref().map_or(0, count_commands)
-            }
+            Statement::If {
+                then_block,
+                else_block,
+                ..
+            } => count_commands(then_block) + else_block.as_deref().map_or(0, count_commands),
         })
         .sum()
 }

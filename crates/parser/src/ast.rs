@@ -46,7 +46,10 @@ pub struct Command {
 #[derive(Debug, Clone, PartialEq)]
 pub enum Argument {
     /// `--name` or `--name=value`. A bare flag carries no value.
-    Named { name: String, value: Option<Value> },
+    Named {
+        name: String,
+        value: Option<Value>,
+    },
     Positional(Value),
 }
 

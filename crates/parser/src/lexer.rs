@@ -84,7 +84,11 @@ pub fn lex(src: &str) -> Result<Vec<Spanned>, ParseError> {
 
     macro_rules! push {
         ($tok:expr, $line:expr, $col:expr) => {
-            tokens.push(Spanned { token: $tok, line: $line, col: $col })
+            tokens.push(Spanned {
+                token: $tok,
+                line: $line,
+                col: $col,
+            })
         };
     }
 
@@ -219,7 +223,11 @@ pub fn lex(src: &str) -> Result<Vec<Spanned>, ParseError> {
                     i += 2;
                     col += 2;
                 } else {
-                    return Err(ParseError::new(tline, tcol, "unexpected `!` — did you mean `!=`?"));
+                    return Err(ParseError::new(
+                        tline,
+                        tcol,
+                        "unexpected `!` — did you mean `!=`?",
+                    ));
                 }
             }
             '-' => {
@@ -349,6 +357,10 @@ fn lex_number(chars: &[char], line: usize, col: usize) -> Result<(Token, usize),
     let raw: String = chars[..len].iter().collect();
     match raw.parse::<f64>() {
         Ok(n) => Ok((Token::Number(n), len)),
-        Err(_) => Err(ParseError::new(line, col, format!("malformed number `{raw}`"))),
+        Err(_) => Err(ParseError::new(
+            line,
+            col,
+            format!("malformed number `{raw}`"),
+        )),
     }
 }

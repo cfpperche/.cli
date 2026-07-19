@@ -10,7 +10,11 @@ pub struct ParseError {
 
 impl ParseError {
     pub fn new(line: usize, col: usize, message: impl Into<String>) -> Self {
-        Self { line, col, message: message.into() }
+        Self {
+            line,
+            col,
+            message: message.into(),
+        }
     }
 }
 

@@ -56,7 +56,11 @@ impl Parser {
     fn expect_ident(&mut self, what: &str) -> Result<String, ParseError> {
         match self.peek() {
             Some(Token::Ident(_)) => {
-                let Some(Spanned { token: Token::Ident(s), .. }) = self.advance() else {
+                let Some(Spanned {
+                    token: Token::Ident(s),
+                    ..
+                }) = self.advance()
+                else {
                     unreachable!()
                 };
                 Ok(s)
@@ -153,7 +157,11 @@ impl Parser {
             self.end_of_statement()?;
             None
         };
-        Ok(Statement::If { condition: Condition { left, comparison }, then_block, else_block })
+        Ok(Statement::If {
+            condition: Condition { left, comparison },
+            then_block,
+            else_block,
+        })
     }
 
     /// Parses statements until the closing `}` (consumed). The opening `{`
@@ -201,7 +209,11 @@ impl Parser {
                 "a value on its own is not a statement — pipe it into a command (`$x | cmd`)",
             ));
         }
-        Ok(Pipeline { tried, source, commands })
+        Ok(Pipeline {
+            tried,
+            source,
+            commands,
+        })
     }
 
     fn parse_command(&mut self) -> Result<Command, ParseError> {
@@ -210,7 +222,11 @@ impl Parser {
         loop {
             match self.peek() {
                 Some(Token::Flag(_)) => {
-                    let Some(Spanned { token: Token::Flag(flag), .. }) = self.advance() else {
+                    let Some(Spanned {
+                        token: Token::Flag(flag),
+                        ..
+                    }) = self.advance()
+                    else {
                         unreachable!()
                     };
                     let value = if self.peek() == Some(&Token::Assign) {
@@ -232,25 +248,41 @@ impl Parser {
     fn parse_value(&mut self) -> Result<Value, ParseError> {
         match self.peek() {
             Some(Token::Str(_)) => {
-                let Some(Spanned { token: Token::Str(s), .. }) = self.advance() else {
+                let Some(Spanned {
+                    token: Token::Str(s),
+                    ..
+                }) = self.advance()
+                else {
                     unreachable!()
                 };
                 Ok(Value::Str(s))
             }
             Some(Token::Number(_)) => {
-                let Some(Spanned { token: Token::Number(n), .. }) = self.advance() else {
+                let Some(Spanned {
+                    token: Token::Number(n),
+                    ..
+                }) = self.advance()
+                else {
                     unreachable!()
                 };
                 Ok(Value::Number(n))
             }
             Some(Token::Bool(_)) => {
-                let Some(Spanned { token: Token::Bool(b), .. }) = self.advance() else {
+                let Some(Spanned {
+                    token: Token::Bool(b),
+                    ..
+                }) = self.advance()
+                else {
                     unreachable!()
                 };
                 Ok(Value::Bool(b))
             }
             Some(Token::Var(_)) => {
-                let Some(Spanned { token: Token::Var(path), .. }) = self.advance() else {
+                let Some(Spanned {
+                    token: Token::Var(path),
+                    ..
+                }) = self.advance()
+                else {
                     unreachable!()
                 };
                 Ok(Value::Var(path))
